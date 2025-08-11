@@ -1,5 +1,12 @@
 # Topprism-ChatOpt 🎯
 
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/guohongbin-git/topprism_chatopt/blob/main/LICENSE)
+[![Streamlit](https://img.shields.io/badge/streamlit-1.37.0-red)](https://streamlit.io/)
+[![OR-Tools](https://img.shields.io/badge/OR--Tools-9.10.4067-orange)](https://developers.google.com/optimization)
+[![Last Commit](https://img.shields.io/github/last-commit/guohongbin-git/topprism_chatopt)](https://github.com/guohongbin-git/topprism_chatopt/commits/main)
+[![Repo Size](https://img.shields.io/github/repo-size/guohongbin-git/topprism_chatopt)](https://github.com/guohongbin-git/topprism_chatopt)
+
 > 自然语言驱动的智能决策引擎 —— 让业务人员也能做复杂排程。
 
 ## 🚀 简介
