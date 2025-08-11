@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "topprism-chatopt"
+version = "0.1.0"
+description = "自然语言驱动的智能决策引擎 —— 让业务人员也能做复杂排程"
+readme = "README.md"
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "streamlit>=1.37.0",
+    "pandas>=2.2.0",
+    "ortools>=9.10.4067",
+    "sentence-transformers>=2.5.1",
+    "faiss-cpu>=1.8.0",
+    "openai>=1.35.0",
+    "plotly>=5.18.0",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=22.0",
+    "flake8>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/topprism-chatopt"
+Repository = "https://github.com/yourname/topprism-chatopt"
+
+[project.scripts]
+topprism-chatopt = "topprism_chatopt.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+topprism_chatopt = [
+    "data/*.csv",
+    "knowledge_base.json",
+]

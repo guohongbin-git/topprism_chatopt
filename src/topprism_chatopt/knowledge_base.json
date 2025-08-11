@@ -1,0 +1,94 @@
+{
+  "project": "Topprism-ChatOpt",
+  "version": "0.2",
+  "description": "Topprism 智能规划知识库",
+  "semantic_patterns": [
+    {
+      "id": "cardinality_per_agent",
+      "description": "每个代理最多/最少访问若干客户",
+      "patterns": [
+        "每个.*最多.*个.*",
+        "每名.*不能超过.*个.*",
+        "每人至少拜访.*客户",
+        "每天最多跑.*家",
+        "每个销售每天最多拜访.*个客户"
+      ],
+      "intent": "limit_visit_count",
+      "parameters": ["agent_type", "max_count", "entity_type"],
+      "math_form": "∀a ∈ A: ∑x[a,e] ≤ C",
+      "or_tools_template": "routing.AddConstantDimension(1, {max_count}, True, 'VisitCount')"
+    },
+    {
+      "id": "time_window",
+      "description": "客户必须在指定时间段内被服务",
+      "patterns": [
+        "在.*到.*之间.*",
+        "必须在.*前完成",
+        "只能在上午.*",
+        ".*点之前.*",
+        ".*必须在.*-.*点拜访",
+        "医院客户必须在9-12点拜访"
+      ],
+      "intent": "service_time_window",
+      "parameters": ["node", "start", "end"],
+      "math_form": "S_i ∈ [a_i, b_i]",
+      "or_tools_template": "time_dimension.CumulVar(node).SetRange({start}*60, {end}*60)"
+    },
+    {
+      "id": "priority_objective",
+      "description": "优先安排高价值或特定类型客户",
+      "patterns": [
+        "优先安排.*",
+        "优先拜访.*客户",
+        "尽量安排.*",
+        ".*类客户优先安排",
+        "A类客户优先安排"
+      ],
+      "intent": "maximize_priority",
+      "parameters": ["category", "weight"],
+      "math_form": "max ∑ w_i · x_i",
+      "or_tools_template": "routing.AddDisjunction([node], {penalty})"
+    },
+    {
+      "id": "distance_constraint",
+      "description": "基于地理位置的距离约束",
+      "patterns": [
+        "距离.*公里内优先安排",
+        "优先安排附近客户",
+        "就近拜访"
+      ],
+      "intent": "distance_priority",
+      "parameters": ["max_distance"],
+      "math_form": "distance(i,j) ≤ D",
+      "or_tools_template": "# 距离约束需要在距离计算中实现"
+    }
+  ],
+  "objective_templates": [
+    {
+      "id": "minimize_distance",
+      "code": "routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)"
+    },
+    {
+      "id": "maximize_coverage",
+      "code": "assignment = routing.ReadAssignmentFromSolverWithParameters(solution, search_parameters)\nobjective = assignment.ObjectiveValue()"
+    },
+    {
+      "id": "minimize_time",
+      "code": "time_dimension.SetGlobalSpanCostCoefficient(100)"
+    }
+  ],
+  "entities": {
+    "agent": ["name", "working_hours", "start_location", "max_visits_per_day"],
+    "customer": ["name", "lat", "lon", "priority", "service_time_minutes", "time_window_start", "time_window_end"]
+  },
+  "industry_profiles": {
+    "sales_visit": {
+      "common_constraints": ["cardinality_per_agent", "time_window", "priority_objective"],
+      "default_objective": "maximize_coverage"
+    },
+    "delivery": {
+      "common_constraints": ["cardinality_per_agent", "time_window"],
+      "default_objective": "minimize_distance"
+    }
+  }
+}
